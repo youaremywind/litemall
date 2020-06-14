@@ -5,7 +5,7 @@
     <div class="filter-container">
       <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 160px;" placeholder="请输入用户ID" />
       <el-input v-model="listQuery.orderSn" clearable class="filter-item" style="width: 160px;" placeholder="请输入订单编号" />
-      <el-date-picker v-model="listQuery.timeArray" type="datetimerange" class="filter-item" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" />
+      <el-date-picker v-model="listQuery.timeArray" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" class="filter-item" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" />
       <el-select v-model="listQuery.orderStatusArray" multiple style="width: 200px" class="filter-item" placeholder="请选择订单状态">
         <el-option v-for="(key, value) in statusMap" :key="key" :label="key" :value="value" />
       </el-select>
@@ -36,9 +36,10 @@
 
       <el-table-column align="center" label="物流渠道" prop="shipChannel" />
 
-      <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="250" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-permission="['GET /admin/order/detail']" type="primary" size="mini" @click="handleDetail(scope.row)">详情</el-button>
+          <el-button v-permission="['POST /admin/order/delete']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           <el-button v-if="scope.row.orderStatus==201" v-permission="['POST /admin/order/ship']" type="primary" size="mini" @click="handleShip(scope.row)">发货</el-button>
           <el-button v-if="scope.row.orderStatus==202||scope.row.orderStatus==204" v-permission="['POST /admin/order/refund']" type="primary" size="mini" @click="handleRefund(scope.row)">退款</el-button>
         </template>
@@ -152,7 +153,7 @@
 </template>
 
 <script>
-import { detailOrder, listOrder, listChannel, refundOrder, shipOrder } from '@/api/order'
+import { detailOrder, listOrder, listChannel, refundOrder, deleteOrder, shipOrder } from '@/api/order'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import checkPermission from '@/utils/permission' // 权限判断函数
 
@@ -308,6 +309,20 @@ export default {
             })
           })
         }
+      })
+    },
+    handleDelete(row) {
+      deleteOrder({ orderId: row.id }).then(response => {
+        this.$notify.success({
+          title: '成功',
+          message: '订单删除成功'
+        })
+        this.getList()
+      }).catch(response => {
+        this.$notify.error({
+          title: '失败',
+          message: response.data.errmsg
+        })
       })
     },
     handleRefund(row) {

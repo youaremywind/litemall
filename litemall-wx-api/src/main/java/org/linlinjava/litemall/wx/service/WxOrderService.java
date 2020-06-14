@@ -411,7 +411,11 @@ public class WxOrderService {
         }
 
         // 删除购物车里面的商品信息
-        cartService.clearGoods(userId);
+        if(cartId.equals(0)){
+            cartService.clearGoods(userId);
+        }else{
+            cartService.deleteById(cartId);
+        }
 
         // 商品货品数量减少
         for (LitemallCart checkGoods : checkedGoodsList) {
@@ -529,6 +533,9 @@ public class WxOrderService {
                 throw new RuntimeException("商品货品库存增加失败");
             }
         }
+
+        // 返还优惠券
+        releaseCoupon(orderId);
 
         return ResponseUtil.ok();
     }
@@ -1009,4 +1016,21 @@ public class WxOrderService {
         return ResponseUtil.ok();
     }
 
+    /**
+     * 取消订单/退款返还优惠券
+     * <br/>
+     * @param orderId
+     * @return void
+     * @author Tyson
+     * @date 2020/6/8/0008 1:41
+     */
+    public void releaseCoupon(Integer orderId) {
+        List<LitemallCouponUser> couponUsers = couponUserService.findByOid(orderId);
+        for (LitemallCouponUser couponUser: couponUsers) {
+            // 优惠券状态设置为可使用
+            couponUser.setStatus(CouponUserConstant.STATUS_USABLE);
+            couponUser.setUpdateTime(LocalDateTime.now());
+            couponUserService.update(couponUser);
+        }
+    }
 }

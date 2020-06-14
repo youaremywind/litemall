@@ -46,8 +46,8 @@ public class AdminOrderController {
     @RequiresPermissionsDesc(menu = {"商场管理", "订单管理"}, button = "查询")
     @GetMapping("/list")
     public Object list(Integer userId, String orderSn,
-                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                        @RequestParam(required = false) List<Short> orderStatusArray,
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer limit,
@@ -105,6 +105,19 @@ public class AdminOrderController {
         return adminOrderService.ship(body);
     }
 
+
+    /**
+     * 删除订单
+     *
+     * @param body 订单信息，{ orderId：xxx }
+     * @return 订单操作结果
+     */
+    @RequiresPermissions("admin:order:delete")
+    @RequiresPermissionsDesc(menu = {"商场管理", "订单管理"}, button = "订单删除")
+    @PostMapping("/delete")
+    public Object delete(@RequestBody String body) {
+        return adminOrderService.delete(body);
+    }
 
     /**
      * 回复订单商品
