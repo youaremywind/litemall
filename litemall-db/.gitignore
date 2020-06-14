@@ -2,3 +2,4 @@
 /target/
 /litemall-db.iml
 /src/main/resources/application-db.yml
+/mybatis-generator/generatorConfig.xml
