@@ -455,17 +455,18 @@ export default {
         courses: this.tableData
       }
       publishContracts(contracts).then(response => {
-        this.$notify.success({
-          title: '成功',
-          message: '创建成功'
-        })
+        // this.$notify.success({
+        //   title: '成功',
+        //   message: '创建成功'
+        // })
+        window.location.href = 'C:\\Users\\youar\\Desktop\\out_example_payment_hack.docx'
         // this.$store.dispatch('tagsView/delView', this.$route)
         // this.$router.push({ path: '/goods/list' })
       }).catch(response => {
-        // MessageBox.alert('业务错误：' + response.data.errmsg, '警告', {
-        //   confirmButtonText: '确定',
-        //   type: 'error'
-        // })
+        MessageBox.alert('业务错误：' + response.data.errmsg, '警告', {
+          confirmButtonText: '确定',
+          type: 'error'
+        })
       })
     },
     // uploadIconUrl: function(response) {
