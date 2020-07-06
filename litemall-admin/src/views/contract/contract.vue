@@ -459,7 +459,7 @@ export default {
         //   title: '成功',
         //   message: '创建成功'
         // })
-        window.location.href = 'C:\\Users\\youar\\Desktop\\out_example_payment_hack.docx'
+        window.location.href = 'https://litemall.hziee.top/files/out_example_payment_hack.docx'
         // this.$store.dispatch('tagsView/delView', this.$route)
         // this.$router.push({ path: '/goods/list' })
       }).catch(response => {
