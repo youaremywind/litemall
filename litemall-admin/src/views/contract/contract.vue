@@ -36,7 +36,7 @@
         <span style="width:200px">常规赠送</span>
         <span style="width:50px">0元</span>
         <span style="width:160px">
-          <el-input-number v-model.number="addAmounts" size="mini" style="width:100px" clearable />课时
+          <el-input-number v-model.number="addAmounts" size="mini" :min="0" style="width:100px" clearable />课时
         </span>
         <span style="width:100px">0元</span>
         <span style="width:100px" />
@@ -167,9 +167,7 @@ export default {
   name: 'Contracrt',
   data() {
     return {
-      // uploadPath,
-      // list: [],
-      // listLoading: true,
+      valid: true,
       catL1: [
         {
           courseName: '高二常规英语',
@@ -303,16 +301,6 @@ export default {
         coursePrices: null,
         courseAmounts: null
       },
-      // dataForm: {
-      //   id: undefined,
-      //   name: '',
-      //   keywords: '',
-      //   level: 'L2',
-      //   pid: 0,
-      //   desc: '',
-      //   iconUrl: '',
-      //   picUrl: ''
-      // },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -329,12 +317,6 @@ export default {
         ],
         coursePrice: [
           { required: true, message: '课程单价不能为空', trigger: 'blur' }
-        ],
-        name: [
-          { required: true, message: '名字不能为空', trigger: 'blur' }
-        ],
-        telephone: [
-          { required: true, message: '手机号码不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -446,19 +428,35 @@ export default {
       })
     },
     generateContract: function() {
-      this.tableData.forEach(item => {
-        item.courseTotal = item.coursePrices * item.courseAmounts
-      })
-      const contracts = {
-        name: this.name,
-        telephone: this.telephone,
-        addAmounts: this.addAmounts,
-        averagePrice: this.averagePrice,
-        allAmounts: this.allAmounts,
-        total: this.total,
-        courses: this.tableData
+      if (!this.name) {
+        MessageBox.alert('请输入名字', '错误', {
+          confirmButtonText: '确定',
+          type: 'error' })
+        this.valid = false
       }
-      this.generate22(contracts)
+      if (!this.telephone) {
+        MessageBox.alert('请输入手机号', '错误', {
+          confirmButtonText: '确定',
+          type: 'error' })
+        this.valid = false
+      }
+      console.log(this.valid)
+      if (this.valid) {
+        this.tableData.forEach(item => {
+          item.courseTotal = item.coursePrices * item.courseAmounts
+        })
+        const contracts = {
+          name: this.name,
+          telephone: this.telephone,
+          addAmounts: this.addAmounts,
+          averagePrice: this.averagePrice,
+          allAmounts: this.allAmounts,
+          total: this.total,
+          courses: this.tableData,
+          date: this.getdate()
+        }
+        this.generate22(contracts)
+      }
       // publishContracts(contracts).then(response => {
       //   // this.$notify.success({
       //   //   title: '成功',
@@ -558,7 +556,7 @@ export default {
     generate22(contracts) {
       // const that = this
       // 读取并获得模板文件的二进制内容
-      JSZipUtils.getBinaryContent('/xx.docx', function(error, content) {
+      JSZipUtils.getBinaryContent('/payment.docx', function(error, content) {
         // model.docx是模板。我们在导出的时候，会根据此模板来导出对应的数据
         // 抛出异常
         if (error) {
@@ -593,6 +591,20 @@ export default {
         // 将目标文件对象保存为目标类型的文件，并命名
         saveAs(out, '合同模板.docx')
       })
+    },
+    getdate() {
+      var date = new Date()
+      var year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var strDate = date.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      var currentdate = year + ' 年 ' + month + ' 月 ' + strDate + ' 日 '
+      return currentdate
     }
   }
 }
