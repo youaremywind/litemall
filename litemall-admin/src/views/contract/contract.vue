@@ -155,7 +155,11 @@
 </style>
 
 <script>
-import { publishContracts } from '@/api/contract'
+import Docxtemplater from 'docxtemplater'
+import PizZip from 'pizzip'
+import JSZipUtils from 'jszip-utils'
+import { saveAs } from 'file-saver'
+// import { publishContracts } from '@/api/contract'
 import { MessageBox } from 'element-ui'
 import { getToken } from '@/utils/auth'
 
@@ -454,20 +458,21 @@ export default {
         total: this.total,
         courses: this.tableData
       }
-      publishContracts(contracts).then(response => {
-        // this.$notify.success({
-        //   title: '成功',
-        //   message: '创建成功'
-        // })
-        window.location.href = 'C:\\Users\\youar\\Desktop\\out_example_payment_hack.docx'
-        // this.$store.dispatch('tagsView/delView', this.$route)
-        // this.$router.push({ path: '/goods/list' })
-      }).catch(response => {
-        MessageBox.alert('业务错误：' + response.data.errmsg, '警告', {
-          confirmButtonText: '确定',
-          type: 'error'
-        })
-      })
+      this.generate22(contracts)
+      // publishContracts(contracts).then(response => {
+      //   // this.$notify.success({
+      //   //   title: '成功',
+      //   //   message: '创建成功'
+      //   // })
+      //   window.location.href = 'C:\\Users\\youar\\Desktop\\out_example_payment_hack.docx'
+      //   // this.$store.dispatch('tagsView/delView', this.$route)
+      //   // this.$router.push({ path: '/goods/list' })
+      // }).catch(response => {
+      //   MessageBox.alert('业务错误：' + response.data.errmsg, '警告', {
+      //     confirmButtonText: '确定',
+      //     type: 'error'
+      //   })
+      // })
     },
     // uploadIconUrl: function(response) {
     //   this.dataForm.iconUrl = response.data.url
@@ -549,6 +554,45 @@ export default {
           type: 'error' })
         this.tableData[index].courseAmounts = 0
       }
+    },
+    generate22(contracts) {
+      // const that = this
+      // 读取并获得模板文件的二进制内容
+      JSZipUtils.getBinaryContent('/xx.docx', function(error, content) {
+        // model.docx是模板。我们在导出的时候，会根据此模板来导出对应的数据
+        // 抛出异常
+        if (error) {
+          throw error
+        }
+        // 创建一个PizZip实例，内容为模板的内容
+        const zip = new PizZip(content)
+        // 创建并加载docxtemplater实例对象
+        const doc = new Docxtemplater().loadZip(zip)
+        // 设置模板变量的值
+        doc.setData(contracts
+        )
+        try {
+          // 用模板变量的值替换所有模板变量
+          doc.render()
+        } catch (error) {
+          // 抛出异常
+          const e = {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+            properties: error.properties
+          }
+          console.log(JSON.stringify({ error: e }))
+          throw error
+        }
+        // 生成一个代表docxtemplater对象的zip文件（不是一个真实的文件，而是在内存中的表示）
+        const out = doc.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        })
+        // 将目标文件对象保存为目标类型的文件，并命名
+        saveAs(out, '合同模板.docx')
+      })
     }
   }
 }
