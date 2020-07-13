@@ -19,25 +19,10 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span> 超级管理员用户名: admin123</span>
-          <span> 超级管理员用户名：admin123</span>
-        </div>
-        <div class="tips">
-          <span> 商城管理员用户名: mall123</span>
-          <span> 商城管理员用户名：mall123</span>
-        </div>
-        <div class="tips">
-          <span> 推广管理员用户名: promotion123</span>
-          <span> 推广管理员用户名：promotion123</span>
-        </div>
-      </div>
     </el-form>
 
     <div class="copyright">
-      Copyright © 2020 xxx.com 版权所有 <a href="http://www.example.com/">沪ICP备xxx号</a>
+      Copyright © 2020 litemall.hziee.top 版权所有 <a href="">浙ICP备17031458号</a>
     </div>
   </div>
 </template>

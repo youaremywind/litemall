@@ -582,30 +582,30 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    // 广告
-    path: '/contract',
-    component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'contractManage',
-    meta: {
-      title: '合同',
-      icon: 'link'
-    },
-    children: [
-      {
-        path: 'contract1',
-        component: () => import('@/views/contract/contract'),
-        name: 'contract1',
-        meta: {
-          perms: ['GET /admin/ad/list', 'POST /admin/ad/create', 'GET /admin/ad/read', 'POST /admin/ad/update', 'POST /admin/ad/delete'],
-          title: '支付合同1',
-          noCache: true
-        }
-      }
-    ]
-  },
+  // {
+  //   // 广告
+  //   path: '/contract',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   alwaysShow: true,
+  //   name: 'contractManage',
+  //   meta: {
+  //     title: '合同',
+  //     icon: 'link'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'contract1',
+  //       component: () => import('@/views/contract/contract'),
+  //       name: 'contract1',
+  //       meta: {
+  //         perms: ['GET /admin/ad/list', 'POST /admin/ad/create', 'GET /admin/ad/read', 'POST /admin/ad/update', 'POST /admin/ad/delete'],
+  //         title: '支付合同1',
+  //         noCache: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/profile',
     component: Layout,
