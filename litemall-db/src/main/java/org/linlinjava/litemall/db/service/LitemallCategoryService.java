@@ -37,8 +37,22 @@ public class LitemallCategoryService {
         return categoryMapper.selectByExample(example);
     }
 
+    public List<LitemallCategory> queryL1ByOrder() {
+        LitemallCategoryExample example = new LitemallCategoryExample();
+        example.setOrderByClause("sort_order asc");
+        example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
+        return categoryMapper.selectByExample(example);
+    }
+
     public List<LitemallCategory> queryByPid(Integer pid) {
         LitemallCategoryExample example = new LitemallCategoryExample();
+        example.or().andPidEqualTo(pid).andDeletedEqualTo(false);
+        return categoryMapper.selectByExample(example);
+    }
+
+    public List<LitemallCategory> queryByPidAndOrder(Integer pid) {
+        LitemallCategoryExample example = new LitemallCategoryExample();
+        example.setOrderByClause("sort_order desc");
         example.or().andPidEqualTo(pid).andDeletedEqualTo(false);
         return categoryMapper.selectByExample(example);
     }
@@ -90,6 +104,7 @@ public class LitemallCategoryService {
 
     public List<LitemallCategory> queryChannel() {
         LitemallCategoryExample example = new LitemallCategoryExample();
+        example.setOrderByClause("sort_order asc");
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
         return categoryMapper.selectByExampleSelective(example, CHANNEL);
     }

@@ -56,7 +56,7 @@ public class WxCatalogController {
     public Object index(Integer id) {
 
         // 所有一级分类目录
-        List<LitemallCategory> l1CatList = categoryService.queryL1();
+        List<LitemallCategory> l1CatList = categoryService.queryL1ByOrder();
 
         // 当前一级分类目录
         LitemallCategory currentCategory = null;
@@ -71,7 +71,7 @@ public class WxCatalogController {
         // 当前一级分类目录对应的二级分类目录
         List<LitemallCategory> currentSubCategory = null;
         if (null != currentCategory) {
-            currentSubCategory = categoryService.queryByPid(currentCategory.getId());
+            currentSubCategory = categoryService.queryByPidAndOrder(currentCategory.getId());
         }
 
         Map<String, Object> data = new HashMap<String, Object>();
@@ -95,13 +95,13 @@ public class WxCatalogController {
 
 
         // 所有一级分类目录
-        List<LitemallCategory> l1CatList = categoryService.queryL1();
+        List<LitemallCategory> l1CatList = categoryService.queryL1ByOrder();
 
         //所有子分类列表
         Map<Integer, List<LitemallCategory>> allList = new HashMap<>();
         List<LitemallCategory> sub;
         for (LitemallCategory category : l1CatList) {
-            sub = categoryService.queryByPid(category.getId());
+            sub = categoryService.queryByPidAndOrder(category.getId());
             allList.put(category.getId(), sub);
         }
 
@@ -111,7 +111,7 @@ public class WxCatalogController {
         // 当前一级分类目录对应的二级分类目录
         List<LitemallCategory> currentSubCategory = null;
         if (null != currentCategory) {
-            currentSubCategory = categoryService.queryByPid(currentCategory.getId());
+            currentSubCategory = categoryService.queryByPidAndOrder(currentCategory.getId());
         }
 
         Map<String, Object> data = new HashMap<String, Object>();
@@ -138,7 +138,7 @@ public class WxCatalogController {
         if(currentCategory == null){
             return ResponseUtil.badArgumentValue();
         }
-        List<LitemallCategory> currentSubCategory = categoryService.queryByPid(currentCategory.getId());
+        List<LitemallCategory> currentSubCategory = categoryService.queryByPidAndOrder(currentCategory.getId());
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("currentCategory", currentCategory);
