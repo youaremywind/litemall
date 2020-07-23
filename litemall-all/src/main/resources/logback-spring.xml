@@ -10,6 +10,7 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n
             </pattern>
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
 
@@ -18,10 +19,10 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/log-%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
-
         <encoder>
             <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n
             </pattern>
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
 
@@ -30,10 +31,10 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
-
         <encoder>
             <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n
             </pattern>
+            <charset>UTF-8</charset>
         </encoder>
         <!-- 此日志文件只记录ERROR级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
