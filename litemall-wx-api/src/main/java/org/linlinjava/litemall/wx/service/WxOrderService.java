@@ -259,7 +259,7 @@ public class WxOrderService {
         String message = JacksonUtil.parseString(body, "message");
         Integer grouponRulesId = JacksonUtil.parseInteger(body, "grouponRulesId");
         Integer grouponLinkId = JacksonUtil.parseInteger(body, "grouponLinkId");
-
+        Boolean hasMyself=JacksonUtil.parseBoolean(body, "hasMyself");
         //如果是团购项目,验证活动是否有效
         if (grouponRulesId != null && grouponRulesId > 0) {
             LitemallGrouponRules rules = grouponRulesService.findById(grouponRulesId);
@@ -355,8 +355,10 @@ public class WxOrderService {
 
         // 根据订单商品总价计算运费，满足条件（例如88元）则免运费，否则需要支付运费（例如8元）；
         BigDecimal freightPrice = new BigDecimal(0);
-        if (checkedGoodsPrice.compareTo(SystemConfig.getFreightLimit()) < 0) {
-            freightPrice = SystemConfig.getFreight();
+        if (!hasMyself){
+            if (checkedGoodsPrice.compareTo(SystemConfig.getFreightLimit()) < 0) {
+                freightPrice = SystemConfig.getFreight();
+            }
         }
 
         // 可以使用的其他钱，例如用户积分
