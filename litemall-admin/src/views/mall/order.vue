@@ -35,7 +35,7 @@
 
       <el-table-column align="center" label="物流单号" prop="shipSn" />
 
-      <el-table-column align="center" label="物流渠道" prop="shipChannel" />
+      <el-table-column align="center" label="物流渠道" prop="shipChannel" :formatter="stateFormat" />
 
       <el-table-column align="center" label="操作" width="250" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -69,6 +69,9 @@
             <span>（收货人）{{ orderDetail.order.consignee }}</span>
             <span>（手机号）{{ orderDetail.order.mobile }}</span>
             <span>（地址）{{ orderDetail.order.address }}</span>
+          </el-form-item>
+          <el-form-item v-if="orderDetail.order.shipChannel === 'BySelf'" label="配送方式">
+            <span>上门自取或者配送上门</span>
           </el-form-item>
           <el-form-item label="商品信息">
             <el-table :data="orderDetail.orderGoods" border fit highlight-current-row>
@@ -381,6 +384,13 @@ export default {
     printOrder() {
       this.$print(this.$refs.print)
       this.orderDialogVisible = false
+    },
+    stateFormat(row, column) {
+      if (row.shipChannel === 'BySelf') {
+        return '上门取货或配送'
+      } else {
+        return row.shipChannel
+      }
     }
   }
 }

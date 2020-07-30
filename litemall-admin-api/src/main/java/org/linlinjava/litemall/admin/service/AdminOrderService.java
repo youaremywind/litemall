@@ -192,8 +192,14 @@ public class AdminOrderService {
         Integer orderId = JacksonUtil.parseInteger(body, "orderId");
         String shipSn = JacksonUtil.parseString(body, "shipSn");
         String shipChannel = JacksonUtil.parseString(body, "shipChannel");
-        if (orderId == null || shipSn == null || shipChannel == null) {
-            return ResponseUtil.badArgument();
+        if ("BySelf".equals(shipChannel)){
+            if (orderId == null || shipChannel == null) {
+                return ResponseUtil.badArgument();
+            }
+        }else{
+            if (orderId == null || shipSn == null || shipChannel == null) {
+                return ResponseUtil.badArgument();
+            }
         }
 
         LitemallOrder order = orderService.findById(orderId);

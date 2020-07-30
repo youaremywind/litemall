@@ -2,8 +2,14 @@ package org.linlinjava.litemall.core.notify;
 
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -87,16 +93,33 @@ public class NotifyService {
      * @param content 邮件内容
      */
     @Async
-    public void notifyMail(String subject, String content) {
+    public void notifyMail(String subject, String content) throws UnsupportedEncodingException {
         if (mailSender == null)
             return;
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(sendFrom);
-        message.setTo(sendTo);
-        message.setSubject(subject);
-        message.setText(content);
-        mailSender.send(message);
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom(sendFrom);
+//        message.setTo(sendTo);
+//        String encodedSubject = MimeUtility.encodeText(subject, MimeUtility.mimeCharset("gb2312"), null);
+//        message.setSubject(encodedSubject);
+//        message.setContent(content, "text/html;charset=UTF-8");
+//        message.setText(content);
+//        mailSender.send(message);
+        JavaMailSender javaMailSender = (JavaMailSender) mailSender;
+        MimeMessage mime = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper;
+        try {
+            helper = new MimeMessageHelper(mime, true, "utf-8");
+            helper.setFrom(sendFrom);
+            helper.setTo(sendTo);
+//            helper.setCc("hanmeimei@xxx.com");
+            String encodedSubject = MimeUtility.encodeText(subject, MimeUtility.mimeCharset("gb2312"), null);
+            helper.setSubject(encodedSubject);
+            helper.setText(content);
+        } catch (MessagingException me) {
+            me.printStackTrace();
+        }
+        javaMailSender.send(mime);
     }
 
     private String getTemplateId(NotifyType notifyType, List<Map<String, String>> values) {

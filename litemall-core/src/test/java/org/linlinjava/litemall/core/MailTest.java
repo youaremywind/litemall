@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.Executor;
 
 /**
@@ -35,7 +36,7 @@ public class MailTest {
     private NotifyService notifyService;
 
     @Test
-    public void testMail() {
+    public void testMail() throws UnsupportedEncodingException {
         notifyService.notifyMail("订单信息", "订单1111111已付款，请发货");
     }
 

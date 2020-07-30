@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/wx/order")
@@ -115,7 +116,7 @@ public class WxOrderController {
      * @return 操作结果
      */
     @PostMapping("pay-notify")
-    public Object payNotify(HttpServletRequest request, HttpServletResponse response) {
+    public Object payNotify(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         return wxOrderService.payNotify(request, response);
     }
 
@@ -127,7 +128,7 @@ public class WxOrderController {
      * @return 订单退款操作结果
      */
     @PostMapping("refund")
-    public Object refund(@LoginUser Integer userId, @RequestBody String body) {
+    public Object refund(@LoginUser Integer userId, @RequestBody String body) throws UnsupportedEncodingException {
         return wxOrderService.refund(userId, body);
     }
 

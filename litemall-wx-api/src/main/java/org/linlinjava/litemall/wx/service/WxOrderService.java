@@ -38,6 +38,7 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -139,7 +140,8 @@ public class WxOrderService {
             orderVo.put("orderStatusText", OrderUtil.orderStatusText(o));
             orderVo.put("handleOption", OrderUtil.build(o));
             orderVo.put("aftersaleStatus", o.getAftersaleStatus());
-
+            //是否上门
+            orderVo.put("hasMyself",o.getHasMyself());
             LitemallGroupon groupon = grouponService.queryByOrderId(o.getId());
             if (groupon != null) {
                 orderVo.put("isGroupin", true);
@@ -205,6 +207,8 @@ public class WxOrderService {
         orderVo.put("expCode", order.getShipChannel());
         orderVo.put("expName", expressService.getVendorName(order.getShipChannel()));
         orderVo.put("expNo", order.getShipSn());
+        //是否上门
+        orderVo.put("hasMyself",order.getHasMyself());
 
         List<LitemallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
 
@@ -259,6 +263,7 @@ public class WxOrderService {
         String message = JacksonUtil.parseString(body, "message");
         Integer grouponRulesId = JacksonUtil.parseInteger(body, "grouponRulesId");
         Integer grouponLinkId = JacksonUtil.parseInteger(body, "grouponLinkId");
+        //是否上门
         Boolean hasMyself=JacksonUtil.parseBoolean(body, "hasMyself");
         //如果是团购项目,验证活动是否有效
         if (grouponRulesId != null && grouponRulesId > 0) {
@@ -387,6 +392,8 @@ public class WxOrderService {
         order.setIntegralPrice(integralPrice);
         order.setOrderPrice(orderTotalPrice);
         order.setActualPrice(actualPrice);
+        //是否上门
+        order.setHasMyself(hasMyself);
 
         // 有团购
         if (grouponRules != null) {
@@ -678,7 +685,7 @@ public class WxOrderService {
      * @return 操作结果
      */
     @Transactional
-    public Object payNotify(HttpServletRequest request, HttpServletResponse response) {
+    public Object payNotify(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         String xmlResult = null;
         try {
             xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
@@ -795,7 +802,7 @@ public class WxOrderService {
      * @param body   订单信息，{ orderId：xxx }
      * @return 订单退款操作结果
      */
-    public Object refund(Integer userId, String body) {
+    public Object refund(Integer userId, String body) throws UnsupportedEncodingException {
         if (userId == null) {
             return ResponseUtil.unlogin();
         }
